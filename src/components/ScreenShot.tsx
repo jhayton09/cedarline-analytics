@@ -136,7 +136,9 @@ export function ScreenShot({
               tabIndex={0}
               role="group"
               aria-label={`${label} — scrollable image`}
-              className="mx-auto w-full max-w-[1600px] flex-1 overflow-auto overscroll-contain rounded-lg"
+              // `safe` centring falls back to start alignment once the image overflows,
+              // so a tall or wide sheet can still be scrolled to its top-left corner.
+              className="mx-auto grid w-full max-w-[1600px] flex-1 overflow-auto overscroll-contain rounded-lg [place-content:safe_center]"
               // Wide spreadsheets stay legible: the image never renders below 60% of its
               // native width, so on a phone you pan rather than squint.
               style={
