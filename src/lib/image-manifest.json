@@ -1,0 +1,38 @@
+{
+  "cedarline-logo": {
+    "width": 1200,
+    "height": 300
+  },
+  "cedarline-icon": {
+    "width": 512,
+    "height": 512
+  },
+  "jake-hayton-headshot": {
+    "width": 1000,
+    "height": 1333
+  },
+  "carolina-landscaping-dashboard": {
+    "width": 1412,
+    "height": 824
+  },
+  "carolina-landscaping-data": {
+    "width": 2236,
+    "height": 310
+  },
+  "queen-city-cleaning-dashboard": {
+    "width": 1300,
+    "height": 1000
+  },
+  "queen-city-cleaning-scenarios": {
+    "width": 2226,
+    "height": 615
+  },
+  "blue-ridge-dashboard": {
+    "width": 860,
+    "height": 772
+  },
+  "blue-ridge-job-automation": {
+    "width": 2060,
+    "height": 1030
+  }
+}
