@@ -17,16 +17,13 @@ export const services: Service[] = [
     summary:
       'One place to see how the business is actually performing, updated from your own data instead of assembled by hand each month.',
     detail:
-      'Reporting built around the handful of numbers that change decisions — what you sold, what it cost to deliver, and where the month landed against plan.',
+      'Reporting built around the handful of numbers that change decisions — revenue, cost to deliver, and performance against plan.',
     deliverable:
       'Usually a single workbook with a dashboard sheet that recalculates itself whenever the underlying data is updated.',
     capabilities: [
       'KPI dashboards',
       'Monthly management reporting',
-      'Revenue and financial reporting',
       'Profitability tracking',
-      'Sales and pipeline reporting',
-      'Operational performance',
       'Performance versus target',
       'Automated calculations',
     ],
@@ -38,18 +35,15 @@ export const services: Service[] = [
     summary:
       'Models that let you test a decision before you make it — pricing, hiring, capacity, or a slower quarter than you planned for.',
     detail:
-      'Assumptions live in one place and are clearly labeled, so you can change a number and see what it does to revenue, margin, and cash requirements.',
+      'Assumptions live in one place and are clearly labeled, so changing a number shows its effect on revenue, margin, and cash.',
     deliverable:
       'Usually a model workbook with one assumptions sheet you control, and a dashboard that responds to whatever you change.',
     capabilities: [
       'Revenue and expense forecasts',
-      'Annual budgets',
       'Downside / base / upside scenarios',
       'Break-even analysis',
       'Capacity and staffing planning',
       'Seasonality modeling',
-      'Pricing analysis',
-      'Decision-support models',
     ],
   },
   {
@@ -63,14 +57,11 @@ export const services: Service[] = [
     deliverable:
       'Usually a rebuilt workbook with clear entry sheets, calculations that run themselves, and reporting sitting on top.',
     capabilities: [
-      'Rebuilding inefficient workbooks',
       'Consolidating fragmented trackers',
-      'Automated reporting workflows',
       'Lead and job tracking systems',
       'Job and project profitability',
       'Automated status flags and alerts',
       'Standardized operating workbooks',
-      'Excel and Google Sheets',
     ],
   },
 ];

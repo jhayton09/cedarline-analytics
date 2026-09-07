@@ -49,17 +49,12 @@ export function About() {
                   forecasting, and advanced Excel systems.
                 </p>
                 <p>
-                  Cedarline exists because of a specific gap. Plenty of small businesses are large
-                  enough to have real operational complexity — jobs, crews, seasonality, thin
-                  margins — but not large enough to employ anyone whose job is to make sense of the
-                  numbers. Reporting ends up living in whichever spreadsheet grew the fastest, and
-                  it gets harder to trust every year.
-                </p>
-                <p>
-                  The work is the reporting layer those businesses would have if they did employ an
-                  analyst: dashboards, forecasts and operating workbooks that are clearly built,
-                  honest about their assumptions, and maintainable by the person who actually has to
-                  use them.
+                  Cedarline exists for a specific gap: businesses complex enough to need real
+                  reporting — jobs, crews, seasonality, thin margins — but not large enough to
+                  employ a dedicated analyst. The work is the reporting layer those businesses would
+                  otherwise be missing: dashboards, forecasts and operating workbooks that are
+                  honest about their assumptions and built to be maintained by the person who
+                  actually uses them.
                 </p>
                 <p className="text-ink-800">
                   Every project is handled by me directly. You will know exactly who built your

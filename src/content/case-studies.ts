@@ -46,20 +46,18 @@ export const caseStudies: CaseStudy[] = [
     subtitle: 'Management Reporting & Dashboard System',
     category: 'Dashboards & Business Reporting',
     challenge:
-      'Management needed a clearer way to understand financial and operating performance without manually reviewing multiple monthly metrics scattered across a workbook.',
+      'Management needed a clear way to see financial and operating performance without manually reviewing metrics scattered across the workbook.',
     solution: [
-      'A centralized Excel management reporting system that organizes operating data on one sheet and calculates the reporting layer from it automatically.',
-      'Headline KPIs, profitability metrics, monthly trends and performance against target all update from the same underlying data, so the monthly reporting step is a review rather than a rebuild.',
+      'A centralized Excel reporting system that organizes operating data on one sheet and calculates KPIs, profitability, trends and performance-versus-target automatically — turning the monthly reporting step into a review rather than a rebuild.',
     ],
     result:
       'A streamlined reporting system that converts underlying business data into an easy-to-read management dashboard.',
     capabilities: [
       'Management dashboards',
-      'KPI reporting',
       'Revenue and profitability analysis',
+      'Performance versus target',
       'Operational performance tracking',
       'Automated calculations',
-      'Performance versus target',
     ],
     builtWith: 'Microsoft Excel',
     shots: [
@@ -83,21 +81,18 @@ export const caseStudies: CaseStudy[] = [
     subtitle: 'Financial Forecasting & Scenario Analysis',
     category: 'Financial Modeling & Forecasting',
     challenge:
-      'Management needed a structured way to evaluate future performance under different assumptions about growth, pricing, costs and operating conditions.',
+      'Management needed a structured way to test future performance under different assumptions about growth, pricing and costs.',
     solution: [
-      'A 12-month forecasting model driven by a single assumptions sheet: customer growth, jobs per customer, revenue per job, labor and supply costs, and overhead growth.',
-      'Downside, base and upside scenarios are calculated side by side and selected from a dropdown, with break-even analysis, monthly seasonality and implied staffing capacity flowing through to the dashboard.',
+      'A 12-month forecasting model driven by one assumptions sheet, with downside, base and upside scenarios selectable from a dropdown — break-even, seasonality and staffing capacity all flow through automatically.',
     ],
     result:
-      'A flexible decision-support model that allows management to evaluate how changes in business assumptions affect revenue, profitability, customer growth and operating requirements.',
+      'A flexible decision-support model that shows how changes in growth, pricing or cost assumptions affect revenue, profitability and operating requirements.',
     capabilities: [
       'Financial forecasting',
       'Scenario analysis',
       'Break-even analysis',
       'Assumption-driven modeling',
-      'Profitability forecasting',
       'Capacity planning',
-      'Management dashboards',
     ],
     builtWith: 'Microsoft Excel',
     shots: [
@@ -121,22 +116,19 @@ export const caseStudies: CaseStudy[] = [
     subtitle: 'Operations Automation & Process Improvement',
     category: 'Spreadsheet Automation & Business Systems',
     challenge:
-      'Lead, job and operating-expense information was maintained separately, so understanding sales performance, job profitability, outstanding work and overall performance meant combining it by hand.',
+      'Lead, job and expense information was maintained separately, so understanding sales performance, job profitability and outstanding work meant combining it by hand.',
     solution: [
-      'A centralized Excel operating system that connects lead tracking, job management, expenses, profitability and management reporting in one workbook.',
-      'Job costs and margins calculate themselves, overdue and in-progress work is flagged automatically, and lead conversion and profitability roll up into a single management dashboard.',
+      'A centralized Excel operating system connecting lead tracking, job management, expenses and profitability in one workbook — job costs and margins calculate themselves, overdue work is flagged automatically, and everything rolls up into a single management dashboard.',
     ],
     result:
-      'A centralized operating system that reduces manual consolidation and gives management a clearer view of sales, jobs, profitability, and work requiring attention.',
+      'A centralized system that cuts manual consolidation and gives management a clear view of sales, jobs, profitability and work needing attention.',
     capabilities: [
       'Spreadsheet automation',
-      'Process improvement',
       'Data consolidation',
       'Lead and pipeline tracking',
       'Job profitability analysis',
       'Automated operational alerts',
       'Expense tracking',
-      'KPI reporting',
     ],
     builtWith: 'Microsoft Excel',
     shots: [
