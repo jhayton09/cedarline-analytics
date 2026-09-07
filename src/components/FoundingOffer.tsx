@@ -61,8 +61,8 @@ export function FoundingOffer() {
                 <div className="mt-6 space-y-5 text-[1.0625rem] leading-[1.7] text-white/70">
                   <p>
                     Cedarline is opening three founding-client engagements at an introductory rate
-                    while refining its delivery process. Each engagement focuses on one clearly
-                    defined reporting, forecasting, or business-system problem.
+                    while refining its delivery process. The goal is simple: give each early client
+                    direct access to a custom Cedarline engagement at a lower introductory price.
                   </p>
                   <p>
                     Together we identify one focused reporting, forecasting or spreadsheet problem,
