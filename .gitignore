@@ -30,3 +30,6 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# ad-hoc visual review captures (scripts/review-screenshots.mjs)
+/review-screenshots
