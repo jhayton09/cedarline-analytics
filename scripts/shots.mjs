@@ -31,6 +31,7 @@ const sections = [
   'approach',
   'about',
   'founding-offer',
+  'faq',
   'contact',
 ];
 
@@ -101,6 +102,50 @@ for (const vp of viewports) {
   await page.waitForTimeout(400);
   const stillOpen = await page.locator('dialog[open]').count();
   if (stillOpen > 0) errors.push('[lightbox] did not close on Escape');
+  await context.close();
+}
+
+// Reduced-motion check: reveal targets must render fully visible immediately,
+// with no wait for scroll or the IntersectionObserver.
+{
+  const context = await browser.newContext({
+    viewport: { width: 1440, height: 900 },
+    reducedMotion: 'reduce',
+  });
+  const page = await context.newPage();
+  await page.goto(base, { waitUntil: 'networkidle' });
+
+  const opacity = await page.locator('[data-reveal]').first().evaluate((el) => getComputedStyle(el).opacity);
+  if (opacity !== '1') errors.push(`[reduced-motion] first [data-reveal] opacity is ${opacity}, expected 1`);
+
+  await context.close();
+}
+
+// FAQ accordion check: keyboard-only, at desktop width.
+{
+  const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const page = await context.newPage();
+  await page.goto(base, { waitUntil: 'networkidle' });
+
+  const items = page.locator('#faq details');
+  const first = items.nth(0);
+  const second = items.nth(1);
+
+  await first.locator('summary').focus();
+  if ((await first.getAttribute('open')) !== null) errors.push('[faq] first item open before interaction');
+
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(150);
+  if ((await first.getAttribute('open')) === null) errors.push('[faq] Enter did not open the focused item');
+
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(150);
+  if ((await second.getAttribute('open')) === null) errors.push('[faq] Enter did not open the second item');
+  // Exclusive `name="faq"` groups should close the first as the second opens,
+  // but only in browsers that support it — don't fail the check on those that don't.
+
+  await page.screenshot({ path: `${outDir}/desktop-1440-faq-open.png` });
   await context.close();
 }
 

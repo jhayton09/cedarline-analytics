@@ -1,6 +1,7 @@
 import { About } from '@/components/About';
 import { Approach } from '@/components/Approach';
 import { Contact } from '@/components/Contact';
+import { FAQ } from '@/components/FAQ';
 import { FoundingOffer } from '@/components/FoundingOffer';
 import { Hero } from '@/components/Hero';
 import { Services } from '@/components/Services';
@@ -8,6 +9,7 @@ import { StartingPoints } from '@/components/StartingPoints';
 import { Work } from '@/components/Work';
 import { site } from '@/content/site';
 import { services } from '@/content/services';
+import { faq } from '@/content/faq';
 
 /**
  * Describes the business itself. Nothing here is a claim the page does not also
@@ -34,12 +36,27 @@ const structuredData = {
   },
 };
 
+/** Mirrors the FAQ section verbatim — same source array, same wording, no new claims. */
+const faqStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: { '@type': 'Answer', text: item.answer },
+  })),
+};
+
 export default function HomePage() {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
       />
       <Hero />
       <StartingPoints />
@@ -48,6 +65,7 @@ export default function HomePage() {
       <Approach />
       <About />
       <FoundingOffer />
+      <FAQ />
       <Contact />
     </>
   );

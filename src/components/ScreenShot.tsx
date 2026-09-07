@@ -73,7 +73,8 @@ export function ScreenShot({
           type="button"
           onClick={openDialog}
           aria-label={`Enlarge screenshot: ${label}`}
-          className="group block w-full cursor-zoom-in overflow-hidden rounded-xl border border-line bg-white text-left shadow-panel transition-shadow duration-300 hover:shadow-lift"
+          data-hover-lift
+          className="group block w-full cursor-zoom-in overflow-hidden rounded-xl border border-line bg-white text-left shadow-panel transition-[box-shadow,transform] duration-300 hover:shadow-lift"
         >
           <span className="flex items-center gap-2 border-b border-line bg-mist-50 px-3 py-2 sm:px-3.5">
             <SheetIcon className="h-3.5 w-3.5 shrink-0 text-moss-600" />

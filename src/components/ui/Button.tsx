@@ -40,7 +40,11 @@ export function Button({
   ...props
 }: Props) {
   return (
-    <Link className={`${base} ${variants[variant]} ${sizes[size]} ${className}`} {...props}>
+    <Link
+      data-hover-lift-sm
+      className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
+      {...props}
+    >
       {children}
     </Link>
   );

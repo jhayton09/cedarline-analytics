@@ -85,7 +85,7 @@ async function withHeaderUnstuck(page, fn) {
 /** Reads absolute document-coordinate boundaries for the sections we crop from. */
 async function measure(page) {
   return page.evaluate(() => {
-    const ids = ['top', 'starting-points', 'services', 'work', 'approach', 'about', 'founding-offer', 'contact'];
+    const ids = ['top', 'starting-points', 'services', 'work', 'approach', 'about', 'founding-offer', 'faq', 'contact'];
     const out = {};
     for (const id of ids) {
       const el = document.getElementById(id);
@@ -158,7 +158,9 @@ const browser = await chromium.launch();
   // About section.
   await crop(fullPagePath, 'desktop-about.png', m.about.top, m.about.bottom, width);
 
-  // Founding Offer + Contact + footer, through the true end of the page.
+  // FAQ section on its own, then Founding Offer + FAQ + Contact + footer together,
+  // through the true end of the page.
+  await crop(fullPagePath, 'desktop-faq.png', m.faq.top, m.faq.bottom, width);
   await crop(fullPagePath, 'desktop-offer-contact.png', m['founding-offer'].top, m.pageHeight, width);
 
   await context.close();
@@ -179,6 +181,7 @@ const browser = await chromium.launch();
 
   await crop(fullPagePath, 'mobile-hero.png', 0, m.top.bottom, width);
   await crop(fullPagePath, 'mobile-work.png', m.work.top, m.work.bottom, width);
+  await crop(fullPagePath, 'mobile-faq.png', m.faq.top, m.faq.bottom, width);
   await crop(fullPagePath, 'mobile-offer-contact.png', m['founding-offer'].top, m.pageHeight, width);
 
   await context.close();
