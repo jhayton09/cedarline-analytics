@@ -63,8 +63,11 @@ const SCREENSHOTS = [
   {
     src: 'blue-ridge-job-automation.png',
     out: 'work/blue-ridge-job-automation',
-    // Content ends at x=2043; rows continue past the bottom of the capture.
-    crop: { left: 0, top: 0, width: 2060, height: 1030 },
+    // Recaptured 2026-09-06 to remove a stray "Plot Area" tooltip; this version is
+    // 2235x1035 (was 2242x1036) and its Attention Required header/filter icon runs
+    // to x=2099, wider than the old crop — content ends at x=2099. Rows continue
+    // past the bottom of the capture, cut cleanly at 1030 between rows.
+    crop: { left: 0, top: 0, width: 2120, height: 1030 },
     note: 'job log with calculated columns and status flags',
   },
 ];
