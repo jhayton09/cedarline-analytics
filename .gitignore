@@ -33,3 +33,4 @@ yarn-error.log*
 
 # ad-hoc visual review captures (scripts/review-screenshots.mjs)
 /review-screenshots
+.env*
