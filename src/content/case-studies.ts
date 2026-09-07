@@ -33,9 +33,11 @@ function shot(key: ManifestKey, sheet: string, alt: string, caption: string): Sh
 /**
  * Every project below is a self-directed demonstration build, not client work.
  * The disclosure is part of the data so it cannot be rendered without it.
+ * The full explanation lives in the "A note on these projects" callout at the
+ * top of the Work section (see Work.tsx) — this shorter line repeats per case
+ * study without restating the whole thing each time.
  */
-export const demonstrationDisclosure =
-  'Fictional demonstration project created to showcase Cedarline Analytics capabilities. Not a client engagement — the business, figures and names are invented.';
+export const demonstrationDisclosure = 'Fictional demonstration project built by Cedarline Analytics.';
 
 export const caseStudies: CaseStudy[] = [
   {

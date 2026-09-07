@@ -45,8 +45,8 @@ export function About() {
               <div className="mt-6 space-y-5 text-[1.0625rem] leading-[1.7] text-slate-body">
                 <p>
                   Cedarline Analytics was founded by Jake Hayton, an economics student at the
-                  University of North Carolina at Chapel Hill, working in financial analysis,
-                  forecasting and advanced Excel systems.
+                  University of North Carolina at Chapel Hill with experience in financial analysis,
+                  forecasting, and advanced Excel systems.
                 </p>
                 <p>
                   Cedarline exists because of a specific gap. Plenty of small businesses are large

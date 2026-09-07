@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { nav, site } from '@/content/site';
 
@@ -8,18 +7,12 @@ export function SiteFooter() {
       <div className="container-x">
         <div className="grid gap-10 py-14 sm:py-16 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-5">
-            <Link href="#top" className="inline-flex items-center gap-3 rounded">
-              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-white p-1.5">
-                <Image
-                  src="/brand/cedarline-icon.webp"
-                  alt=""
-                  width={512}
-                  height={512}
-                  sizes="40px"
-                  className="h-full w-full object-contain"
-                />
-              </span>
-              <span className="font-display text-[1.0625rem] font-semibold tracking-[-0.01em] text-white">
+            {/* Text-only wordmark: the icon's navy-to-black gradient is designed for a
+                white backdrop and loses its left arc entirely against this dark
+                footer, so a plain white icon tile (or a de-haloed cutout — tested and
+                still half-disappears) both read worse than clean type. */}
+            <Link href="#top" className="inline-block rounded">
+              <span className="font-display text-lg font-semibold tracking-[-0.01em] text-white">
                 {site.name}
               </span>
             </Link>

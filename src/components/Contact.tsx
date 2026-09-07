@@ -68,15 +68,15 @@ export function Contact() {
 
                 <dl className="mt-8 divide-y divide-line border-t border-line">
                   <div className="grid gap-1 py-3.5 sm:grid-cols-3 sm:gap-4">
-                    <dt className="text-[0.8125rem] text-slate-muted">Replies</dt>
+                    <dt className="text-[0.8125rem] text-slate-muted">Direct contact</dt>
                     <dd className="text-[0.9375rem] leading-[1.5] text-slate-body sm:col-span-2">
-                      Come from Jake directly — not an assistant or an autoresponder
+                      Your message goes directly to Jake.
                     </dd>
                   </div>
                   <div className="grid gap-1 py-3.5 sm:grid-cols-3 sm:gap-4">
-                    <dt className="text-[0.8125rem] text-slate-muted">No form</dt>
+                    <dt className="text-[0.8125rem] text-slate-muted">Simple communication</dt>
                     <dd className="text-[0.9375rem] leading-[1.5] text-slate-body sm:col-span-2">
-                      This site collects nothing and runs no tracking — email is the only channel
+                      Email is the primary contact channel.
                     </dd>
                   </div>
                 </dl>

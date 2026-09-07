@@ -52,15 +52,17 @@ export function FoundingOffer() {
                   id="founding-heading"
                   className="mt-5 text-[1.75rem] leading-[1.15] font-semibold tracking-[-0.022em] text-white sm:text-4xl lg:text-[2.625rem]"
                 >
-                  Introductory pricing for the first three clients
+                  Founding Client Engagements
                 </h2>
+                <p className="mt-3 text-[1.0625rem] font-medium text-white/60">
+                  Introductory pricing for the first three clients.
+                </p>
 
                 <div className="mt-6 space-y-5 text-[1.0625rem] leading-[1.7] text-white/70">
                   <p>
-                    Cedarline is new, and it is building its first client base. Introductory pricing
-                    is on offer to the first three paying clients while the service process is being
-                    refined — the price reflects where the business is, not the standard of the
-                    work.
+                    Cedarline is opening three founding-client engagements at an introductory rate
+                    while refining its delivery process. Each engagement focuses on one clearly
+                    defined reporting, forecasting, or business-system problem.
                   </p>
                   <p>
                     Together we identify one focused reporting, forecasting or spreadsheet problem,
