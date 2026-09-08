@@ -1,67 +1,43 @@
 export type Service = {
   id: string;
-  index: string;
   title: string;
   summary: string;
-  detail: string;
-  /** What the client actually receives — shown alongside the service title. */
-  deliverable: string;
-  capabilities: string[];
+  examples: string[];
 };
 
 export const services: Service[] = [
   {
     id: 'reporting',
-    index: '01',
     title: 'Dashboards & Business Reporting',
-    summary:
-      'One place to see how the business is actually performing, updated from your own data instead of assembled by hand each month.',
-    detail:
-      'Reporting built around the handful of numbers that change decisions — revenue, cost to deliver, and performance against plan.',
-    deliverable:
-      'Usually a single workbook with a dashboard sheet that recalculates itself whenever the underlying data is updated.',
-    capabilities: [
-      'KPI dashboards',
-      'Monthly management reporting',
-      'Profitability tracking',
-      'Performance versus target',
-      'Automated calculations',
+    summary: 'Turn scattered business data into clear reporting you can actually use.',
+    examples: [
+      'Management dashboards',
+      'KPI reporting',
+      'Revenue and profitability tracking',
+      'Sales or pipeline reporting',
     ],
   },
   {
     id: 'forecasting',
-    index: '02',
     title: 'Financial Modeling & Forecasting',
     summary:
-      'Models that let you test a decision before you make it — pricing, hiring, capacity, or a slower quarter than you planned for.',
-    detail:
-      'Assumptions live in one place and are clearly labeled, so changing a number shows its effect on revenue, margin, and cash.',
-    deliverable:
-      'Usually a model workbook with one assumptions sheet you control, and a dashboard that responds to whatever you change.',
-    capabilities: [
-      'Revenue and expense forecasts',
-      'Downside / base / upside scenarios',
+      'See how pricing, growth, costs, and capacity could affect the business before making the decision.',
+    examples: [
+      'Financial forecasts',
+      'Scenario analysis',
       'Break-even analysis',
-      'Capacity and staffing planning',
-      'Seasonality modeling',
+      'Budget and planning models',
     ],
   },
   {
     id: 'systems',
-    index: '03',
     title: 'Spreadsheet Automation & Business Systems',
-    summary:
-      'The recurring spreadsheet work that quietly consumes hours every week, rebuilt so the workbook does the assembling.',
-    detail:
-      'Fragmented trackers get consolidated, repetitive calculations get automated, and the things that need attention surface on their own.',
-    deliverable:
-      'Usually a rebuilt workbook with clear entry sheets, calculations that run themselves, and reporting sitting on top.',
-    capabilities: [
-      'Consolidating fragmented trackers',
-      'Lead and job tracking systems',
-      'Job and project profitability',
-      'Automated status flags and alerts',
-      'Standardized operating workbooks',
+    summary: 'Reduce repetitive spreadsheet work and make important operating processes easier to manage.',
+    examples: [
+      'Automated calculations',
+      'Linked operating data',
+      'Workflow tracking',
+      'Alerts and status monitoring',
     ],
   },
 ];

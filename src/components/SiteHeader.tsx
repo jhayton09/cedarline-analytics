@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
-import { nav, site } from '@/content/site';
+import { headerNav, site } from '@/content/site';
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -82,11 +82,7 @@ export function SiteHeader() {
     >
       <div className="container-x">
         <div className="flex h-16 items-center justify-between gap-4 sm:h-[4.5rem]">
-          <Link
-            href="#top"
-            aria-label={`${site.name} — back to top`}
-            className="-m-1 shrink-0 rounded p-1"
-          >
+          <Link href="/" aria-label={`${site.name} — homepage`} className="-m-1 shrink-0 rounded p-1">
             <Image
               src="/brand/cedarline-logo.webp"
               alt={site.name}
@@ -98,9 +94,10 @@ export function SiteHeader() {
             />
           </Link>
 
+          {/* Conventional nav: no hamburger at this breakpoint or above. */}
           <nav aria-label="Primary" className="hidden lg:block">
             <ul className="flex items-center gap-1">
-              {nav.map((item) => (
+              {headerNav.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
@@ -117,7 +114,9 @@ export function SiteHeader() {
             {/* Wrapper controls the responsive display: putting `hidden` on the Button
                 itself would collide with the base `inline-flex` utility. */}
             <div className="hidden lg:block">
-              <Button href="#contact">Get in touch</Button>
+              <Button href="/#inquiry" variant="action">
+                Start an Inquiry
+              </Button>
             </div>
 
             <button
@@ -126,7 +125,7 @@ export function SiteHeader() {
               onClick={() => (open ? closeMenu(false) : setOpen(true))}
               aria-expanded={open}
               aria-controls="mobile-nav"
-              className="-mr-1 flex h-10 w-10 items-center justify-center rounded-md border border-line-strong bg-white text-ink-900 transition-colors duration-200 hover:bg-mist-50 lg:hidden"
+              className="-mr-1 flex h-11 w-11 items-center justify-center rounded-md border border-line-strong bg-white text-ink-900 transition-colors duration-200 hover:bg-mist-50 lg:hidden"
             >
               <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
               <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="h-5 w-5">
@@ -160,12 +159,12 @@ export function SiteHeader() {
         <div className="container-x">
           <nav aria-label="Primary (mobile)" className="py-2">
             <ul className="divide-y divide-line">
-              {nav.map((item) => (
+              {headerNav.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
                     onClick={() => closeMenu(false)}
-                    className="flex items-center justify-between py-4 text-base font-medium text-ink-900"
+                    className="flex min-h-11 items-center justify-between py-4 text-base font-medium text-ink-900"
                   >
                     {item.label}
                     <span aria-hidden="true" className="text-slate-muted">
@@ -178,12 +177,13 @@ export function SiteHeader() {
           </nav>
           <div className="pt-1 pb-6">
             <Button
-              href="#contact"
+              href="/#inquiry"
+              variant="action"
               size="lg"
               onClick={() => closeMenu(false)}
               className="w-full"
             >
-              Get in touch
+              Start an Inquiry
             </Button>
           </div>
         </div>

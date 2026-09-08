@@ -53,14 +53,14 @@ export default async function OpengraphImage() {
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div
             style={{
-              fontSize: 62,
+              fontSize: 56,
               fontWeight: 600,
-              lineHeight: 1.12,
+              lineHeight: 1.14,
               letterSpacing: '-0.03em',
-              maxWidth: 900,
+              maxWidth: 920,
             }}
           >
-            Business Analytics &amp; Systems for Small Businesses
+            Run your business from clear numbers, not scattered spreadsheets.
           </div>
           <div
             style={{
@@ -71,8 +71,8 @@ export default async function OpengraphImage() {
               maxWidth: 840,
             }}
           >
-            Dashboards, forecasting and spreadsheet systems that show what is actually happening in
-            your business.
+            Dashboards, forecasts, and spreadsheet systems for small businesses that need clearer
+            reporting and better visibility.
           </div>
         </div>
 

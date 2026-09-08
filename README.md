@@ -5,8 +5,16 @@ Marketing site for Cedarline Analytics (cedarlineanalytics.com).
 Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · statically rendered.
 
 No database, no authentication, no CMS, no API routes, no analytics or tracking
-scripts, no cookies. The whole site is one prerendered page plus generated
-metadata routes.
+scripts, no cookies. The whole site is statically prerendered.
+
+Routes: `/` (home), `/work` (full case studies), `/founding-offer` (a
+standalone landing page for the Founding Client Offer), and `/privacy` /
+`/terms` (draft shells — see `src/app/privacy` and `src/app/terms`, not
+indexed, not final compliance copy).
+
+This is the `v2-conversion-redesign` branch: a controlled redesign of the
+site that is live in production on `main`. It has not been merged or
+deployed — see "Deployment" below.
 
 ## Running it locally
 
@@ -34,9 +42,11 @@ scripts/
   serve.sh              Restarts `next start` cleanly on a given port
   shots.mjs             Dev-only: screenshots the running site at 4 viewports
   a11y.mjs              Dev-only: runs axe-core over the page in 4 states
-src/app/                Layout, page, metadata routes, favicon, OG image
+  review-v2.mjs         Dev-only: V2 functional + a11y + screenshot review — see below
+src/app/                Routes, layout, metadata routes, favicon, OG image
 src/components/         Section and UI components
-src/content/            All site copy: services, case studies, contact details
+src/content/            All site copy: services, case studies, FAQ, the offer, contact details
+src/lib/                Image manifest and the inquiry form's validation/transport
 ```
 
 Copy lives in `src/content/` rather than inside components, so wording can be
@@ -68,7 +78,21 @@ npm i --no-save playwright axe-core
 npm run build && ./scripts/serve.sh 3111
 node scripts/shots.mjs        # writes to /tmp/cedarline-shots
 node scripts/a11y.mjs         # axe-core, expects 0 violations
+node scripts/review-v2.mjs    # V2: FAQ/tabs/lightbox/form/sticky-CTA checks,
+                               # axe-core on every route, screenshots to
+                               # ./review-screenshots-v2 (gitignored)
 ```
+
+## Inquiry form
+
+`src/components/InquiryForm.tsx` is a complete, validated form UI (loading,
+success, and failure states) with **no real delivery mechanism connected**.
+`src/lib/inquiry.ts` isolates that boundary: `submitInquiry()` simulates a
+network round trip and never sends data anywhere. Swap that one function for
+a real transport (an API route that validates the payload again and forwards
+it to email or a CRM) when the form is ready to go live — nothing in the
+component needs to change. Do not treat this form as production-ready until
+that transport exists.
 
 ## Content accuracy
 
@@ -83,6 +107,10 @@ anywhere on the site. Keep it that way.
 
 ## Deployment
 
-Not yet deployed. The domain is registered with Vercel and carries live Google
-Workspace DNS records (MX, SPF, DKIM, DMARC, verification) — those must not be
-modified when the site is connected.
+The V1 site on `main` is live at cedarlineanalytics.com. The domain is
+registered with Vercel and carries live Google Workspace DNS records (MX,
+SPF, DKIM, DMARC, verification) — those must not be modified.
+
+`v2-conversion-redesign` is a controlled redesign branch and is not deployed,
+merged, or connected to Vercel. It stays local/preview-only until it is
+explicitly approved for production.
