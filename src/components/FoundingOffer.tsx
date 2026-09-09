@@ -1,68 +1,40 @@
-import { Button } from '@/components/ui/Button';
+import { Button, TextLink } from '@/components/ui/Button';
 import { Eyebrow } from '@/components/ui/Section';
 import { offer } from '@/content/founding-offer';
 
+/**
+ * A compact commercial teaser, not the full offer — /founding-offer now
+ * carries the turnaround explanation, the guarantee, and the fit/not-fit
+ * list. This section only needs to earn the click through to that page (or
+ * the inquiry, directly).
+ */
 export function FoundingOffer() {
   return (
     <section id="founding-offer" aria-labelledby="founding-heading" className="on-dark scroll-mt-24 bg-ink-900 text-white">
       <div className="container-x">
-        <div className="py-16 sm:py-20 lg:py-24">
-          <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-            <div className="lg:col-span-6">
-              <Eyebrow tone="dark">Founding Client Offer</Eyebrow>
-              <h2
-                id="founding-heading"
-                className="mt-4 text-[1.75rem] leading-[1.15] font-semibold tracking-[-0.022em] text-white sm:text-4xl"
-              >
-                One focused business problem. One fixed price.
-              </h2>
+        <div className="py-14 sm:py-16 lg:py-20">
+          <div className="max-w-2xl">
+            <Eyebrow tone="dark">Founding Client Offer</Eyebrow>
+            <h2
+              id="founding-heading"
+              className="mt-4 text-[1.75rem] leading-[1.15] font-semibold tracking-[-0.022em] text-white sm:text-4xl"
+            >
+              One focused business problem for $150.
+            </h2>
+            <p className="mt-3 text-[0.9375rem] text-white/65">{offer.clientsAvailable}</p>
 
-              <p className="mt-7 flex items-baseline gap-2">
-                <span className="text-5xl font-semibold tracking-[-0.03em] text-white tnum">$150</span>
-                <span className="text-[0.9375rem] text-white/65">total</span>
-              </p>
-              <p className="mt-2 text-[0.9375rem] text-white/65">{offer.clientsAvailable}</p>
+            <p className="mt-6 text-[1.0625rem] font-medium text-white">{offer.teaserPaymentSplit}</p>
+            <p className="mt-2.5 max-w-md text-[0.9375rem] leading-[1.6] text-white/75">
+              {offer.teaserInclusion}
+            </p>
 
-              <p className="mt-6 max-w-md text-[1.0625rem] leading-[1.65] text-white/80">
-                {offer.scopeExplanation}
-              </p>
-
-              <div className="mt-8 border-t border-white/12 pt-6">
-                <h3 className="text-eyebrow font-semibold tracking-[0.14em] text-white/60 uppercase">
-                  Included
-                </h3>
-                <ul className="mt-4 space-y-2.5">
-                  {offer.included.map((item) => (
-                    <li key={item} className="text-[0.9375rem] leading-[1.5] text-white/80">
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <p className="mt-6 border-t border-white/12 pt-6 text-[0.9375rem] text-white/70">
-                {offer.paymentSplit}
-              </p>
-            </div>
-
-            <div className="lg:col-span-6">
-              <div className="border-t border-white/12 pt-6 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10">
-                <h3 className="text-eyebrow font-semibold tracking-[0.14em] text-white/60 uppercase">
-                  {offer.functionalityCommitmentHeading}
-                </h3>
-                <p className="mt-3 max-w-md text-[1.0625rem] leading-[1.6] text-white/80">
-                  {offer.functionalityCommitment}
-                </p>
-
-                <div className="mt-9">
-                  <Button href="#inquiry" variant="action" size="lg" className="w-full sm:w-auto">
-                    Start a Founding Client Inquiry
-                  </Button>
-                  <p className="mt-3.5 text-[0.8125rem] text-white/60">
-                    No phone call required to get started.
-                  </p>
-                </div>
-              </div>
+            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+              <Button href="#inquiry" variant="action" size="lg">
+                Start an Inquiry
+              </Button>
+              <TextLink href="/founding-offer" tone="dark">
+                See full offer details →
+              </TextLink>
             </div>
           </div>
         </div>

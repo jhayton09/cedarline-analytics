@@ -9,7 +9,7 @@ export const services: Service[] = [
   {
     id: 'reporting',
     title: 'Dashboards & Business Reporting',
-    summary: 'Turn scattered business data into clear reporting you can actually use.',
+    summary: 'Clear reporting from the data your business already produces.',
     examples: [
       'Management dashboards',
       'KPI reporting',
@@ -21,7 +21,7 @@ export const services: Service[] = [
     id: 'forecasting',
     title: 'Financial Modeling & Forecasting',
     summary:
-      'See how pricing, growth, costs, and capacity could affect the business before making the decision.',
+      'Understand how changes in pricing, growth, costs, or capacity could affect the business.',
     examples: [
       'Financial forecasts',
       'Scenario analysis',
@@ -32,7 +32,7 @@ export const services: Service[] = [
   {
     id: 'systems',
     title: 'Spreadsheet Automation & Business Systems',
-    summary: 'Reduce repetitive spreadsheet work and make important operating processes easier to manage.',
+    summary: 'Reduce repetitive work and fragile spreadsheet processes.',
     examples: [
       'Automated calculations',
       'Linked operating data',

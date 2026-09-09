@@ -48,7 +48,7 @@ export const demonstrationDisclosure = 'Fictional demonstration project built by
 /** /work top navigation order: Blue Ridge, Queen City Cleaning, Carolina Landscaping. */
 export const caseStudies: CaseStudy[] = [
   {
-    id: 'blue-ridge-home-services',
+    id: 'blue-ridge',
     name: 'Blue Ridge Home Services',
     navLabel: 'Operations & Automation',
     category: 'Operations Automation & Business Systems',
@@ -88,7 +88,7 @@ export const caseStudies: CaseStudy[] = [
     ],
   },
   {
-    id: 'queen-city-cleaning',
+    id: 'queen-city',
     name: 'Queen City Cleaning',
     navLabel: 'Forecasting & Scenario Analysis',
     category: 'Financial Forecasting & Scenario Analysis',
@@ -127,7 +127,7 @@ export const caseStudies: CaseStudy[] = [
     ],
   },
   {
-    id: 'carolina-landscaping',
+    id: 'carolina',
     name: 'Carolina Landscaping',
     navLabel: 'Management Reporting',
     category: 'Management Reporting & Dashboard System',

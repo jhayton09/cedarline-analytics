@@ -19,6 +19,15 @@ export const offer = {
   functionalityCommitmentHeading: 'Functionality commitment',
   functionalityCommitment:
     'If the finished deliverable does not perform the functionality agreed before the project begins, Cedarline will correct it at no additional charge.',
+  /**
+   * Homepage teaser only — the exact wording given for that compact section.
+   * Kept separate from `paymentSplit` above (used by /founding-offer, which
+   * this pass leaves untouched) so the two sections' copy can't drift into
+   * each other by editing one shared string.
+   */
+  teaserPaymentSplit: '$75 to begin · $75 on completion',
+  teaserInclusion:
+    'Includes one focused deliverable, one reasonable revision, a walkthrough, and 7 days of email support.',
 } as const;
 
 /** /founding-offer "What You Get" — worded slightly more specifically than the homepage's Included list. */

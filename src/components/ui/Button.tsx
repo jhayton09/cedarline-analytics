@@ -90,19 +90,28 @@ export function SubmitButton({
  * pattern. Deliberately not a button: a co-equal second button competes with
  * the one real call-to-action on the page.
  */
+const textLinkTones = {
+  light: 'text-ink-900 decoration-line-strong hover:decoration-ink-900',
+  dark: 'text-white decoration-white/40 hover:decoration-white',
+};
+
 export function TextLink({
   href,
+  tone = 'light',
   children,
   className = '',
   ...props
-}: { href: string; children: ReactNode; className?: string } & Omit<
-  ComponentProps<typeof Link>,
-  'href' | 'className' | 'children'
->) {
+}: {
+  href: string;
+  /** 'dark' for use on a navy/on-dark section — same underline pattern, legible on that background. */
+  tone?: 'light' | 'dark';
+  children: ReactNode;
+  className?: string;
+} & Omit<ComponentProps<typeof Link>, 'href' | 'className' | 'children'>) {
   return (
     <Link
       href={href}
-      className={`rounded text-[0.9375rem] font-medium text-ink-900 underline decoration-line-strong underline-offset-4 transition-colors duration-200 hover:decoration-ink-900 ${className}`}
+      className={`rounded text-[0.9375rem] font-medium underline underline-offset-4 transition-colors duration-200 ${textLinkTones[tone]} ${className}`}
       {...props}
     >
       {children}

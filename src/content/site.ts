@@ -16,7 +16,7 @@ export const mailto = {
 export const headerNav = [
   { label: 'Work', href: '/work' },
   { label: 'Services', href: '/#services' },
-  { label: 'About', href: '/#about' },
+  { label: 'About', href: '/about' },
 ] as const;
 
 /** Footer nav is intentionally its own list — it also surfaces the Founding Offer and the inquiry form. */

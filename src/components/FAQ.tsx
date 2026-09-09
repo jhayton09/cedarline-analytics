@@ -1,4 +1,5 @@
 import { FaqAccordion } from '@/components/FaqAccordion';
+import { TextLink } from '@/components/ui/Button';
 import { Eyebrow } from '@/components/ui/Section';
 import { homeFaq } from '@/content/faq';
 
@@ -6,7 +7,7 @@ export function FAQ() {
   return (
     <section id="faq" aria-labelledby="faq-heading" className="scroll-mt-24">
       <div className="container-x">
-        <div className="py-16 sm:py-20 lg:py-24">
+        <div className="py-14 sm:py-16 lg:py-20">
           <Eyebrow>FAQ</Eyebrow>
           <h2
             id="faq-heading"
@@ -17,6 +18,9 @@ export function FAQ() {
 
           <div className="mt-10 sm:mt-12">
             <FaqAccordion items={homeFaq} groupName="home-faq" />
+            <div className="mt-8 max-w-3xl border-t border-line pt-6">
+              <TextLink href="/founding-offer">More about the Founding Client Offer →</TextLink>
+            </div>
           </div>
         </div>
       </div>

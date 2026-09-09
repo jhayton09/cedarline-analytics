@@ -3,7 +3,7 @@ import { Button, TextLink } from '@/components/ui/Button';
 import { Eyebrow } from '@/components/ui/Section';
 import { findCaseStudy } from '@/content/case-studies';
 
-const dashboardShot = findCaseStudy('carolina-landscaping').views[0].shot;
+const dashboardShot = findCaseStudy('carolina').views[0].shot;
 
 export function Hero() {
   return (

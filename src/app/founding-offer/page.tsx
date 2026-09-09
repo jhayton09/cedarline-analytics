@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     'Fix one reporting, forecasting, or spreadsheet-system problem for $150 — a fixed introductory price for Cedarline’s first three paying clients.',
 };
 
-const blueRidge = findCaseStudy('blue-ridge-home-services');
+const blueRidge = findCaseStudy('blue-ridge');
 
 const artifactProofPoints = [
   {

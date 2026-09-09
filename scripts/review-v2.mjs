@@ -125,7 +125,7 @@ async function warmUp(page) {
 }
 
 // ---------------------------------------------------------------------------
-logSection('Functional checks: FAQ, tabs, lightbox, reduced motion, overflow');
+logSection('Functional checks: FAQ, services disclosure, reduced motion, overflow');
 {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
@@ -151,19 +151,52 @@ logSection('Functional checks: FAQ, tabs, lightbox, reduced motion, overflow');
     }`,
   );
 
-  // Keyboard-operate the Featured Work tabs.
-  const tabs = page.locator('#featured-work [role="tab"]');
+  // Services progressive disclosure: title/summary always visible, examples behind "See examples".
+  const serviceDetails = page.locator('#services details').first();
+  const examplesHiddenInitially = await serviceDetails.evaluate((el) => !el.open);
+  console.log(`  Services examples collapsed by default: ${examplesHiddenInitially ? 'OK' : 'FAIL'}`);
+  if (!examplesHiddenInitially) failures++;
+  await serviceDetails.locator('summary').click();
+  const examplesOpen = await serviceDetails.evaluate((el) => el.open);
+  console.log(`  Services "See examples" expands on click: ${examplesOpen ? 'OK' : 'FAIL'}`);
+  if (!examplesOpen) failures++;
+
+  const overflow = await checkOverflow(page);
+  console.log(`  Horizontal overflow at 1440px: ${overflow ? 'FAIL — overflow present' : 'none'}`);
+  if (overflow) failures++;
+
+  console.log(`  Console/network errors: ${watch.errors.length === 0 ? 'none' : watch.errors.join('; ')}`);
+  if (watch.errors.length > 0) failures++;
+
+  await context.close();
+}
+
+// Tabs + lightbox now live on /work (the homepage Featured Work section was removed in this pass).
+{
+  const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const page = await context.newPage();
+  const watch = watchErrors(page, 'work-functional');
+  await page.goto(`${base}/work#blue-ridge`, { waitUntil: 'networkidle' });
+
+  const anchorInView = await page.evaluate(() => {
+    const el = document.getElementById('blue-ridge');
+    if (!el) return false;
+    const r = el.getBoundingClientRect();
+    return r.top < window.innerHeight && r.bottom > 0;
+  });
+  console.log(`  /work#blue-ridge deep link scrolls the right section into view: ${anchorInView ? 'OK' : 'FAIL'}`);
+  if (!anchorInView) failures++;
+
+  const tabs = page.locator('#blue-ridge [role="tab"]');
   await tabs.first().focus();
   await page.keyboard.press('ArrowRight');
   const secondSelected = await tabs.nth(1).getAttribute('aria-selected');
   console.log(`  ScreenshotTabs ArrowRight moves selection: ${secondSelected === 'true' ? 'OK' : 'FAIL'}`);
   if (secondSelected !== 'true') failures++;
 
-  // Lightbox: open via the enlarge button on the currently visible tab panel
-  // (ArrowRight above switched panels, so the first DOM match may be hidden).
   // Every ScreenShot instance on the page renders its own <dialog>, so check
   // for *any* open dialog rather than the first one in document order.
-  await page.locator('#featured-work [role="tabpanel"]:not([hidden]) button[aria-label^="Enlarge"]').click();
+  await page.locator('#blue-ridge [role="tabpanel"]:not([hidden]) button[aria-label^="Enlarge"]').click();
   await page.waitForTimeout(200);
   const dialogOpen = await page.evaluate(() => document.querySelector('dialog[open]') !== null);
   console.log(`  Lightbox opens: ${dialogOpen ? 'OK' : 'FAIL'}`);
@@ -174,13 +207,10 @@ logSection('Functional checks: FAQ, tabs, lightbox, reduced motion, overflow');
   console.log(`  Lightbox closes on Escape: ${dialogClosed ? 'OK' : 'FAIL'}`);
   if (!dialogClosed) failures++;
 
-  const overflow = await checkOverflow(page);
-  console.log(`  Horizontal overflow at 1440px: ${overflow ? 'FAIL — overflow present' : 'none'}`);
-  if (overflow) failures++;
-
-  console.log(`  Console/network errors: ${watch.errors.length === 0 ? 'none' : watch.errors.join('; ')}`);
-  if (watch.errors.length > 0) failures++;
-
+  if (watch.errors.length > 0) {
+    console.log(`  Console/network errors (/work): ${watch.errors.join('; ')}`);
+    failures++;
+  }
   await context.close();
 }
 
@@ -295,6 +325,7 @@ const pages = [
   { url: base, name: 'home' },
   { url: `${base}/work`, name: 'work' },
   { url: `${base}/founding-offer`, name: 'founding-offer' },
+  { url: `${base}/about`, name: 'about' },
   { url: `${base}/privacy`, name: 'privacy' },
   { url: `${base}/terms`, name: 'terms' },
 ];
@@ -339,13 +370,15 @@ logSection('Screenshots');
   const page = await context.newPage();
   await page.goto(base, { waitUntil: 'networkidle' });
   await warmUp(page);
-  const m = await measure(page, ['top', 'featured-work', 'founding-offer', 'inquiry']);
+  const m = await measure(page, ['top', 'work-nav', 'services', 'founding-offer', 'founder', 'inquiry']);
   const full = path.join(outDir, 'v2-home-desktop-full.png');
   await withHeaderUnstuck(page, () => page.screenshot({ path: full, fullPage: true }));
   console.log(`  wrote v2-home-desktop-full.png (${width}x${Math.round(m.pageHeight)})`);
   await crop(full, 'v2-home-desktop-hero.png', 0, m.top.bottom, width);
-  await crop(full, 'v2-home-desktop-featured-work.png', m['featured-work'].top, m['featured-work'].bottom, width);
+  await crop(full, 'v2-home-desktop-work-nav.png', m['work-nav'].top, m['work-nav'].bottom, width);
+  await crop(full, 'v2-home-desktop-services.png', m.services.top, m.services.bottom, width);
   await crop(full, 'v2-home-desktop-offer.png', m['founding-offer'].top, m['founding-offer'].bottom, width);
+  await crop(full, 'v2-home-desktop-founder.png', m.founder.top, m.founder.bottom, width);
   await crop(full, 'v2-home-desktop-form.png', m.inquiry.top, m.inquiry.bottom, width);
 
   // FAQ open state.
@@ -369,11 +402,12 @@ logSection('Screenshots');
   const page = await context.newPage();
   await page.goto(base, { waitUntil: 'networkidle' });
   await warmUp(page);
-  const m = await measure(page, ['top', 'inquiry']);
+  const m = await measure(page, ['top', 'services', 'inquiry']);
   const full = path.join(outDir, 'v2-home-mobile-full.png');
   await withHeaderUnstuck(page, () => page.screenshot({ path: full, fullPage: true }));
   console.log(`  wrote v2-home-mobile-full.png (${width}x${Math.round(m.pageHeight)})`);
   await crop(full, 'v2-home-mobile-hero.png', 0, m.top.bottom, width);
+  await crop(full, 'v2-home-mobile-services.png', m.services.top, m.services.bottom, width);
   await crop(full, 'v2-home-mobile-form.png', m.inquiry.top, m.inquiry.bottom, width);
 
   // Mobile sticky CTA — visible near the top of the page.
@@ -425,6 +459,20 @@ for (const [name, width, height] of [
   await page.screenshot({ path: full, fullPage: true });
   console.log(`  wrote v2-offer-mobile-full.png (${width}x${Math.round(m.pageHeight)})`);
   await crop(full, 'v2-offer-mobile-form.png', m.inquiry.top, m.inquiry.bottom, width);
+  await context.close();
+}
+
+// ---- /about ----
+for (const [name, width, height] of [
+  ['v2-about-desktop-full.png', 1440, 900],
+  ['v2-about-mobile-full.png', 390, 844],
+]) {
+  const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 1 });
+  const page = await context.newPage();
+  await page.goto(`${base}/about`, { waitUntil: 'networkidle' });
+  await warmUp(page);
+  await withHeaderUnstuck(page, () => page.screenshot({ path: path.join(outDir, name), fullPage: true }));
+  console.log(`  wrote ${name}`);
   await context.close();
 }
 

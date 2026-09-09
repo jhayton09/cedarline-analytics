@@ -1,5 +1,4 @@
 import { FAQ } from '@/components/FAQ';
-import { FeaturedWork } from '@/components/FeaturedWork';
 import { Founder } from '@/components/Founder';
 import { FoundingOffer } from '@/components/FoundingOffer';
 import { Hero } from '@/components/Hero';
@@ -10,6 +9,7 @@ import { Problems } from '@/components/Problems';
 import { Services } from '@/components/Services';
 import { SiteFooter } from '@/components/SiteFooter';
 import { SiteHeader } from '@/components/SiteHeader';
+import { WorkNav } from '@/components/WorkNav';
 import { homeFaq } from '@/content/faq';
 import { homeSteps } from '@/content/how-it-works';
 import { services } from '@/content/services';
@@ -71,7 +71,7 @@ export default function HomePage() {
           heading="From business problem to working system in three steps."
           steps={homeSteps}
         />
-        <FeaturedWork />
+        <WorkNav />
         <Services />
         <FoundingOffer />
         <FAQ />
