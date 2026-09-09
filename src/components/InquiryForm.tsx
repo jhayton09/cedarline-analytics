@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { SubmitButton } from '@/components/ui/Button';
 import {
@@ -229,7 +230,11 @@ export function InquiryForm() {
           {disabled ? 'Sending…' : 'Send Inquiry'}
         </SubmitButton>
         <p className="mt-3.5 text-[0.8125rem] text-slate-muted">
-          Your information is used only to respond to your inquiry.
+          Your information is used to respond to your inquiry. See our{' '}
+          <Link href="/privacy" className="underline decoration-slate-muted/50 hover:decoration-slate-muted">
+            Privacy Policy
+          </Link>
+          .
         </p>
       </div>
     </form>
