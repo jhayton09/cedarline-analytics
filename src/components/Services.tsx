@@ -1,20 +1,12 @@
 import { Eyebrow } from '@/components/ui/Section';
 import { services, type Service } from '@/content/services';
 
-function PlusIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" className={className}>
-      <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 /**
  * The title and one-sentence summary are always visible — only the example
  * list sits behind a disclosure. Native <details>/<summary> so the expand
  * control gets correct keyboard support and expanded/collapsed state for
- * free; the icon rotating 45° turns the "+" into a close "×", and the label
- * itself swaps text, so the state change isn't icon-only.
+ * free; the label text itself swaps ("See examples ↓" / "Hide examples ↑"),
+ * so the state change isn't icon-only and needs no separate decorative icon.
  */
 function ServiceRow({ service }: { service: Service }) {
   return (
@@ -29,10 +21,9 @@ function ServiceRow({ service }: { service: Service }) {
         <p className="max-w-xl text-[0.9375rem] leading-[1.6] text-slate-body">{service.summary}</p>
 
         <details className="group mt-4">
-          <summary className="flex min-h-11 w-fit cursor-pointer list-none items-center gap-1.5 text-[0.875rem] font-medium text-ink-900 [&::-webkit-details-marker]:hidden">
-            <span className="group-open:hidden">See examples</span>
-            <span className="hidden group-open:inline">Hide examples</span>
-            <PlusIcon className="h-3 w-3 shrink-0 transition-transform duration-200 group-open:rotate-45" />
+          <summary className="flex min-h-11 w-fit cursor-pointer list-none items-center text-[0.875rem] font-medium text-ink-900 [&::-webkit-details-marker]:hidden">
+            <span className="group-open:hidden">See examples ↓</span>
+            <span className="hidden group-open:inline">Hide examples ↑</span>
           </summary>
           <ul className="mt-4 max-w-xl space-y-2 border-t border-line pt-4">
             {service.examples.map((example) => (
@@ -57,7 +48,7 @@ export function Services() {
             id="services-heading"
             className="mt-4 max-w-2xl text-[1.75rem] leading-[1.15] font-semibold tracking-[-0.022em] sm:text-4xl"
           >
-            Three ways Cedarline helps small businesses get clearer, faster information.
+            What Cedarline can help with.
           </h2>
 
           <div className="mt-10 sm:mt-12">

@@ -89,7 +89,9 @@ export default function AboutPage() {
         {/* Why Cedarline exists */}
         <section className="border-b border-line">
           <div className="container-x">
-            <div className="py-14 sm:py-16">
+            {/* ~18% tighter than the hero/CTA sections' py-14/py-16 — this and the three
+                sections below have less content and were reading as over-spaced. */}
+            <div className="py-11.5 sm:py-13">
               <h2 className="max-w-2xl text-[1.5rem] leading-[1.2] font-semibold tracking-[-0.018em] sm:text-[1.75rem]">
                 Small businesses often need the work of an analyst before they need a full-time
                 analyst.
@@ -112,7 +114,7 @@ export default function AboutPage() {
         {/* Background */}
         <section className="border-b border-line bg-mist-50">
           <div className="container-x">
-            <div className="py-14 sm:py-16">
+            <div className="py-11.5 sm:py-13">
               <h2 className="max-w-2xl text-[1.5rem] leading-[1.2] font-semibold tracking-[-0.018em] sm:text-[1.75rem]">
                 A foundation in economics and analytical work.
               </h2>
@@ -134,7 +136,7 @@ export default function AboutPage() {
         {/* How I work */}
         <section className="border-b border-line">
           <div className="container-x">
-            <div className="py-14 sm:py-16">
+            <div className="py-11.5 sm:py-13">
               <h2 className="max-w-2xl text-[1.5rem] leading-[1.2] font-semibold tracking-[-0.018em] sm:text-[1.75rem]">
                 Direct, scoped, and practical.
               </h2>
@@ -158,7 +160,7 @@ export default function AboutPage() {
         {/* Proof */}
         <section className="border-b border-line bg-mist-50">
           <div className="container-x">
-            <div className="py-14 sm:py-16">
+            <div className="py-11.5 sm:py-13">
               <h2 className="max-w-2xl text-[1.5rem] leading-[1.2] font-semibold tracking-[-0.018em] sm:text-[1.75rem]">
                 Judge the work directly.
               </h2>

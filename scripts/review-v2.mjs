@@ -151,15 +151,21 @@ logSection('Functional checks: FAQ, services disclosure, reduced motion, overflo
     }`,
   );
 
-  // Services progressive disclosure: title/summary always visible, examples behind "See examples".
+  // Services progressive disclosure: title/summary always visible, examples behind "See examples ↓".
   const serviceDetails = page.locator('#services details').first();
   const examplesHiddenInitially = await serviceDetails.evaluate((el) => !el.open);
   console.log(`  Services examples collapsed by default: ${examplesHiddenInitially ? 'OK' : 'FAIL'}`);
   if (!examplesHiddenInitially) failures++;
+  const collapsedLabel = (await serviceDetails.locator('summary').innerText()).trim();
+  console.log(`  Collapsed label reads "See examples ↓": ${collapsedLabel === 'See examples ↓' ? 'OK' : `FAIL (got "${collapsedLabel}")`}`);
+  if (collapsedLabel !== 'See examples ↓') failures++;
   await serviceDetails.locator('summary').click();
   const examplesOpen = await serviceDetails.evaluate((el) => el.open);
   console.log(`  Services "See examples" expands on click: ${examplesOpen ? 'OK' : 'FAIL'}`);
   if (!examplesOpen) failures++;
+  const expandedLabel = (await serviceDetails.locator('summary').innerText()).trim();
+  console.log(`  Expanded label reads "Hide examples ↑": ${expandedLabel === 'Hide examples ↑' ? 'OK' : `FAIL (got "${expandedLabel}")`}`);
+  if (expandedLabel !== 'Hide examples ↑') failures++;
 
   const overflow = await checkOverflow(page);
   console.log(`  Horizontal overflow at 1440px: ${overflow ? 'FAIL — overflow present' : 'none'}`);
@@ -302,20 +308,62 @@ logSection('Mobile sticky CTA');
   const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const page = await context.newPage();
   await page.goto(base, { waitUntil: 'networkidle' });
-  const visibleAtTop = await page.evaluate(() => {
-    const el = document.querySelector('.lg\\:hidden.fixed.bottom-0');
-    return el ? getComputedStyle(el).transform === 'none' || getComputedStyle(el).transform.includes('matrix(1, 0, 0, 1, 0, 0)') : false;
-  });
-  console.log(`  Sticky CTA visible near top of page: ${visibleAtTop ? 'OK' : 'FAIL'}`);
-  if (!visibleAtTop) failures++;
+  const sticky = page.locator('[role="region"][aria-label="Start an inquiry"]');
 
-  await page.locator('#inquiry').scrollIntoViewIfNeeded();
-  await page.waitForTimeout(400);
-  const hiddenAtForm = await page.evaluate(() => {
-    const el = document.querySelector('.lg\\:hidden.fixed.bottom-0');
-    return el ? getComputedStyle(el).transform.includes('1, 0, 0') === false || true : false;
+  // Tailwind v4 applies translate-* via the standalone CSS `translate`
+  // property, not a `transform` matrix — checking `.transform` here always
+  // reads "none" whether the bar is shown or hidden. `.translate` is "0px" at
+  // rest and "0px 100%" once `translate-y-full` is applied.
+  const isShown = async () => sticky.evaluate((el) => getComputedStyle(el).translate === '0px');
+
+  console.log(`  Visible near top of page: ${(await isShown()) ? 'OK' : 'FAIL'}`);
+  if (!(await isShown())) failures++;
+
+  // Focusable and in the tab order while visible.
+  const tabIndexVisible = await sticky.locator('a').evaluate((el) => el.tabIndex);
+  console.log(`  Focusable while visible (tabIndex=${tabIndexVisible}): ${tabIndexVisible !== -1 ? 'OK' : 'FAIL'}`);
+  if (tabIndexVisible === -1) failures++;
+
+  // Bottom clearance: the CTA is a fixed bar of known height: confirm content just
+  // above its top edge is still real, hit-testable page content — not something the
+  // bar has silently swallowed.
+  const clearanceOk = await sticky.evaluate((el) => {
+    const barTop = el.getBoundingClientRect().top;
+    const probeY = barTop - 8; // just above the bar
+    const probeX = window.innerWidth / 2;
+    const hit = document.elementFromPoint(probeX, probeY);
+    return hit !== null && !el.contains(hit);
   });
-  console.log(`  Sticky CTA present in DOM after reaching #inquiry (visual check via screenshot): logged`);
+  console.log(`  Content just above the bar is real, hit-testable page content: ${clearanceOk ? 'OK' : 'FAIL'}`);
+  if (!clearanceOk) failures++;
+
+  // Safe-area inset is actually applied (not just a static bottom padding).
+  const safeArea = await sticky.evaluate((el) => el.style.paddingBottom);
+  const hasSafeArea = safeArea.includes('safe-area-inset-bottom');
+  console.log(`  Safe-area inset applied to bottom padding: ${hasSafeArea ? 'OK' : 'FAIL'} ("${safeArea}")`);
+  if (!hasSafeArea) failures++;
+
+  // Scrolls correctly to #inquiry, then hides permanently rather than
+  // reappearing on the way toward the footer.
+  await sticky.locator('a').click();
+  await page.waitForTimeout(500);
+  const hashCorrect = new URL(page.url()).hash === '#inquiry';
+  console.log(`  CTA click navigates to #inquiry: ${hashCorrect ? 'OK' : 'FAIL'} (${page.url()})`);
+  if (!hashCorrect) failures++;
+
+  await page.waitForTimeout(300); // IntersectionObserver callback + transition
+  console.log(`  Hides once #inquiry is reached: ${!(await isShown()) ? 'OK' : 'FAIL'}`);
+  if (await isShown()) failures++;
+
+  const tabIndexHidden = await sticky.locator('a').evaluate((el) => el.tabIndex);
+  console.log(`  Not focusable once hidden (tabIndex=${tabIndexHidden}): ${tabIndexHidden === -1 ? 'OK' : 'FAIL'}`);
+  if (tabIndexHidden !== -1) failures++;
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight)); // scroll on toward the footer
+  await page.waitForTimeout(200);
+  console.log(`  Stays hidden past #inquiry, toward the footer: ${!(await isShown()) ? 'OK' : 'FAIL'}`);
+  if (await isShown()) failures++;
+
   await context.close();
 }
 
