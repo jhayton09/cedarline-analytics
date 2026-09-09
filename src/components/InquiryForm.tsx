@@ -21,6 +21,11 @@ export function InquiryForm() {
   const formId = useId();
   const successHeadingRef = useRef<HTMLHeadingElement>(null);
   const errorBannerRef = useRef<HTMLParagraphElement>(null);
+  // Formspree's spam honeypot — a plain, uncontrolled input read only at
+  // submit time. Real visitors never see or reach it (see the `hidden`
+  // field below); a bot that indiscriminately fills every input on the
+  // page will fill this one, and Formspree quietly discards the result.
+  const honeypotRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (status === 'success') successHeadingRef.current?.focus();
@@ -61,19 +66,47 @@ export function InquiryForm() {
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // Belt-and-suspenders against double submission: the submit button is
+    // already disabled while `status === 'submitting'`, but that disabling
+    // only takes effect once React re-renders, so a second Enter/click in
+    // that gap is still possible without this early return.
+    if (status === 'submitting') return;
+
     const validation = validateInquiry(payload);
     setErrors(validation);
     if (Object.keys(validation).length > 0) return;
 
     setStatus('submitting');
-    const result = await submitInquiry(payload);
-    setStatus(result.ok ? 'success' : 'error');
+    const result = await submitInquiry(payload, honeypotRef.current?.value ?? '');
+    if (result.ok) {
+      setStatus('success');
+    } else if (result.fieldErrors) {
+      // A mappable, field-specific problem (e.g. Formspree rejects the
+      // email format) — surface it the same way a client-side validation
+      // error appears, rather than the generic transport-failure banner.
+      setErrors(result.fieldErrors);
+      setStatus('idle');
+    } else {
+      setStatus('error');
+    }
   };
 
   const disabled = status === 'submitting';
 
   return (
     <form noValidate onSubmit={onSubmit} className="max-w-lg">
+      {/* Honeypot — hidden from sighted users, screen readers, and the tab
+          order alike (`hidden` removes it from all three at once). A human
+          filling out this form on a browser will never encounter it. */}
+      <input
+        ref={honeypotRef}
+        type="text"
+        name="_gotcha"
+        tabIndex={-1}
+        autoComplete="off"
+        hidden
+      />
+
       {status === 'error' ? (
         <p
           ref={errorBannerRef}

@@ -237,31 +237,80 @@ logSection('Functional checks: FAQ, services disclosure, reduced motion, overflo
 }
 
 // ---------------------------------------------------------------------------
-logSection('Form: validation errors, success, and failure states');
+// All Formspree network calls below are intercepted and mocked via
+// page.route() — this suite validates the integration code (request shape,
+// headers, exactly-once submission, response handling) without generating
+// real Formspree submissions on every run. The small number of genuine
+// live submissions required by this task are done separately and are not
+// part of this repeatable script (see the final report).
+const FORMSPREE_URL = 'https://formspree.io/f/xyeyldzj';
+
+async function formClip(page) {
+  const box = await page.locator('#inquiry').boundingBox();
+  return { x: 0, y: Math.max(0, box.y - 20), width: 1440, height: Math.min(900, box.height + 40) };
+}
+
+logSection('Form: validation, Formspree request shape, success, and failure (mocked network)');
 {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
   const watch = watchErrors(page, 'form');
+
+  const requests = [];
+  await page.route(FORMSPREE_URL, async (route) => {
+    requests.push(route.request());
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true }) });
+  });
+
   await page.goto(`${base}/#inquiry`, { waitUntil: 'networkidle' });
   await page.locator('#inquiry').scrollIntoViewIfNeeded();
 
-  // Submit empty -> inline errors, no data wiped (there is none to wipe, but confirm fields stay).
+  // Submit empty -> inline errors, no network call at all (client validation blocks it).
   await page.locator('#inquiry form button[type="submit"]').click();
   await page.waitForTimeout(100);
   const errorCount = await page.locator('#inquiry form [id$="-error"]').count();
   console.log(`  Empty submit shows inline errors: ${errorCount >= 3 ? 'OK' : 'FAIL'} (${errorCount} errors)`);
   if (errorCount < 3) failures++;
+  console.log(`  Empty submit makes no network request: ${requests.length === 0 ? 'OK' : 'FAIL'}`);
+  if (requests.length !== 0) failures++;
 
   await withHeaderUnstuck(page, async () =>
     page.screenshot({ path: path.join(outDir, 'v2-home-desktop-form-error.png'), clip: await formClip(page) }),
   );
 
-  // Fill valid data and submit -> success state.
+  // Fill valid data and submit -> exactly one request, correct shape, success state.
   await page.locator('#inquiry input[type="email"]').fill('owner@example.com');
-  await page.locator('#inquiry input[type="text"]').fill('Example Business');
-  await page.locator('#inquiry input[type="radio"]').first().check();
+  await page.locator('#inquiry input[type="text"]:not([name="_gotcha"])').fill('Example Business');
+  await page.locator('#inquiry input[type="radio"]').nth(1).check(); // "Forecasting"
   await page.locator('#inquiry form button[type="submit"]').click();
   await page.waitForTimeout(1200);
+
+  console.log(`  Exactly one request sent: ${requests.length === 1 ? 'OK' : `FAIL (${requests.length})`}`);
+  if (requests.length !== 1) failures++;
+  if (requests.length >= 1) {
+    const req = requests[0];
+    console.log(`  Method is POST: ${req.method() === 'POST' ? 'OK' : 'FAIL'}`);
+    if (req.method() !== 'POST') failures++;
+    const headers = req.headers();
+    console.log(`  Accept: application/json: ${headers['accept'] === 'application/json' ? 'OK' : 'FAIL'}`);
+    if (headers['accept'] !== 'application/json') failures++;
+    console.log(`  Content-Type: application/json: ${headers['content-type']?.includes('application/json') ? 'OK' : 'FAIL'}`);
+    if (!headers['content-type']?.includes('application/json')) failures++;
+
+    const sentBody = req.postDataJSON();
+    const expected = { email: 'owner@example.com', business_name: 'Example Business', improvement_category: 'Forecasting' };
+    const bodyMatches = Object.entries(expected).every(([k, v]) => sentBody[k] === v);
+    console.log(`  Body has exactly the three expected fields, correctly mapped: ${bodyMatches ? 'OK' : `FAIL (${JSON.stringify(sentBody)})`}`);
+    if (!bodyMatches) failures++;
+    const sentKeys = Object.keys(sentBody).sort();
+    const allowedKeys = ['_gotcha', 'business_name', 'email', 'improvement_category'].sort();
+    const noExtraFields = JSON.stringify(sentKeys) === JSON.stringify(allowedKeys);
+    console.log(`  No extra/unrelated fields sent: ${noExtraFields ? 'OK' : `FAIL (${sentKeys.join(', ')})`}`);
+    if (!noExtraFields) failures++;
+    console.log(`  Honeypot (_gotcha) sent empty: ${sentBody._gotcha === '' ? 'OK' : 'FAIL'}`);
+    if (sentBody._gotcha !== '') failures++;
+  }
+
   const successVisible = await page.locator('#inquiry h3:has-text("Inquiry received.")').isVisible();
   console.log(`  Valid submit shows success state: ${successVisible ? 'OK' : 'FAIL'}`);
   if (!successVisible) failures++;
@@ -269,32 +318,70 @@ logSection('Form: validation errors, success, and failure states');
     page.screenshot({ path: path.join(outDir, 'v2-home-desktop-form-success.png'), clip: await formClip(page) }),
   );
 
+  console.log(`  Console/network errors: ${watch.errors.length === 0 ? 'none' : watch.errors.join('; ')}`);
+  if (watch.errors.length > 0) failures++;
+
   await context.close();
 }
 
-async function formClip(page) {
-  const box = await page.locator('#inquiry').boundingBox();
-  return { x: 0, y: Math.max(0, box.y - 20), width: 1440, height: Math.min(900, box.height + 40) };
-}
-
+// Double-submit protection: a slow (mocked) response, then two rapid clicks.
 {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
+  const requests = [];
+  await page.route(FORMSPREE_URL, async (route) => {
+    requests.push(route.request());
+    await new Promise((r) => setTimeout(r, 600));
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true }) });
+  });
+  await page.goto(`${base}/#inquiry`, { waitUntil: 'networkidle' });
+  await page.locator('#inquiry').scrollIntoViewIfNeeded();
+  await page.locator('#inquiry input[type="email"]').fill('owner@example.com');
+  await page.locator('#inquiry input[type="text"]:not([name="_gotcha"])').fill('Example Business');
+  await page.locator('#inquiry input[type="radio"]').first().check();
+
+  const submitButton = page.locator('#inquiry form button[type="submit"]');
+  const loadingLabelDuringSubmit = await (async () => {
+    await submitButton.click();
+    // Fire a second click while the first request is still in flight.
+    await submitButton.click({ force: true }).catch(() => {});
+    const label = await submitButton.innerText();
+    return label;
+  })();
+  console.log(`  Button shows loading label while submitting: ${loadingLabelDuringSubmit.includes('Sending') ? 'OK' : 'FAIL'}`);
+  if (!loadingLabelDuringSubmit.includes('Sending')) failures++;
+  await page.waitForTimeout(900);
+  console.log(`  Exactly one request from a rapid double-click: ${requests.length === 1 ? 'OK' : `FAIL (${requests.length})`}`);
+  if (requests.length !== 1) failures++;
+  await context.close();
+}
+
+// Failure state: mocked network failure, generic message shown, data retained.
+{
+  const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const page = await context.newPage();
+  await page.route(FORMSPREE_URL, (route) => route.abort('failed'));
   await page.goto(`${base}/#inquiry`, { waitUntil: 'networkidle' });
   await page.locator('#inquiry').scrollIntoViewIfNeeded();
 
-  // Deliberate, code-controlled failure trigger (see src/lib/inquiry.ts) — not advertised in the UI.
-  await page.locator('#inquiry input[type="email"]').fill('fail@test.dev');
-  await page.locator('#inquiry input[type="text"]').fill('Example Business');
+  await page.locator('#inquiry input[type="email"]').fill('owner@example.com');
+  await page.locator('#inquiry input[type="text"]:not([name="_gotcha"])').fill('Example Business');
   await page.locator('#inquiry input[type="radio"]').first().check();
   await page.locator('#inquiry form button[type="submit"]').click();
-  await page.waitForTimeout(1200);
+  await page.waitForTimeout(600);
   const failVisible = await page.locator('#inquiry [role="alert"]').isVisible();
-  console.log(`  Simulated-failure submit shows error banner: ${failVisible ? 'OK' : 'FAIL'}`);
+  console.log(`  Network-failure submit shows the generic error banner: ${failVisible ? 'OK' : 'FAIL'}`);
   if (!failVisible) failures++;
-  const dataKept = await page.locator('#inquiry input[type="text"]').inputValue();
+  const bannerText = (await page.locator('#inquiry [role="alert"]').innerText()).trim();
+  const isGeneric = bannerText === 'Your inquiry wasn’t sent. Please try again.';
+  console.log(`  Banner shows only the approved generic message (no raw provider error): ${isGeneric ? 'OK' : `FAIL ("${bannerText}")`}`);
+  if (!isGeneric) failures++;
+  const dataKept = await page.locator('#inquiry input[type="text"]:not([name="_gotcha"])').inputValue();
   console.log(`  Entered data kept after failure: ${dataKept === 'Example Business' ? 'OK' : 'FAIL'}`);
   if (dataKept !== 'Example Business') failures++;
+  const buttonReEnabled = await page.locator('#inquiry form button[type="submit"]').isEnabled();
+  console.log(`  Submit button re-enabled after failure: ${buttonReEnabled ? 'OK' : 'FAIL'}`);
+  if (!buttonReEnabled) failures++;
   await withHeaderUnstuck(page, async () =>
     page.screenshot({ path: path.join(outDir, 'v2-home-desktop-form-failure.png'), clip: await formClip(page) }),
   );
@@ -364,6 +451,32 @@ logSection('Mobile sticky CTA');
   console.log(`  Stays hidden past #inquiry, toward the footer: ${!(await isShown()) ? 'OK' : 'FAIL'}`);
   if (await isShown()) failures++;
 
+  await context.close();
+}
+
+// ---------------------------------------------------------------------------
+logSection('Founding Offer form (mocked network) — same transport, same endpoint');
+{
+  const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const page = await context.newPage();
+  const requests = [];
+  await page.route(FORMSPREE_URL, async (route) => {
+    requests.push(route.request());
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true }) });
+  });
+  await page.goto(`${base}/founding-offer#inquiry`, { waitUntil: 'networkidle' });
+  await page.locator('#inquiry').scrollIntoViewIfNeeded();
+  await page.locator('#inquiry input[type="email"]').fill('owner@example.com');
+  await page.locator('#inquiry input[type="text"]:not([name="_gotcha"])').fill('Example Business');
+  await page.locator('#inquiry input[type="radio"]').first().check();
+  await page.locator('#inquiry form button[type="submit"]').click();
+  await page.waitForTimeout(1200);
+
+  console.log(`  Posts to the same Formspree endpoint: ${requests.length === 1 && requests[0].url() === FORMSPREE_URL ? 'OK' : 'FAIL'}`);
+  if (!(requests.length === 1 && requests[0].url() === FORMSPREE_URL)) failures++;
+  const successVisible = await page.locator('#inquiry h3:has-text("Inquiry received.")').isVisible();
+  console.log(`  Shows the same success state: ${successVisible ? 'OK' : 'FAIL'}`);
+  if (!successVisible) failures++;
   await context.close();
 }
 
