@@ -1,8 +1,5 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter, Instrument_Sans } from 'next/font/google';
-import { RevealOnScroll } from '@/components/RevealOnScroll';
-import { SiteFooter } from '@/components/SiteFooter';
-import { SiteHeader } from '@/components/SiteHeader';
 import { site } from '@/content/site';
 import './globals.css';
 
@@ -19,7 +16,7 @@ const display = Instrument_Sans({
 });
 
 const description =
-  'Cedarline Analytics helps small businesses improve reporting, forecasting, dashboards, financial models, and spreadsheet systems.';
+  'Cedarline Analytics builds dashboards, forecasts, and spreadsheet systems that turn scattered business data into clear numbers for small businesses.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -68,6 +65,13 @@ export const viewport: Viewport = {
   colorScheme: 'light',
 };
 
+/**
+ * No <SiteHeader>/<SiteFooter>/<main> here: /founding-offer uses a
+ * deliberately minimal header instead of the full site nav, so header, the
+ * <main id="main"> skip-link target, and footer are all composed per-page
+ * rather than once globally. Home, /work, /privacy and /terms all render the
+ * standard <SiteHeader> + <SiteFooter> themselves.
+ */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${display.variable}`}>
@@ -78,10 +82,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
-        <SiteHeader />
-        <main id="main">{children}</main>
-        <SiteFooter />
-        <RevealOnScroll />
+        {children}
       </body>
     </html>
   );

@@ -1,15 +1,19 @@
-import { About } from '@/components/About';
-import { Approach } from '@/components/Approach';
-import { Contact } from '@/components/Contact';
 import { FAQ } from '@/components/FAQ';
+import { Founder } from '@/components/Founder';
 import { FoundingOffer } from '@/components/FoundingOffer';
 import { Hero } from '@/components/Hero';
+import { HowItWorks } from '@/components/HowItWorks';
+import { InquirySection } from '@/components/InquirySection';
+import { MobileStickyCta } from '@/components/MobileStickyCta';
+import { Problems } from '@/components/Problems';
 import { Services } from '@/components/Services';
-import { StartingPoints } from '@/components/StartingPoints';
-import { Work } from '@/components/Work';
-import { site } from '@/content/site';
+import { SiteFooter } from '@/components/SiteFooter';
+import { SiteHeader } from '@/components/SiteHeader';
+import { WorkNav } from '@/components/WorkNav';
+import { homeFaq } from '@/content/faq';
+import { homeSteps } from '@/content/how-it-works';
 import { services } from '@/content/services';
-import { faq } from '@/content/faq';
+import { site } from '@/content/site';
 
 /**
  * Describes the business itself. Nothing here is a claim the page does not also
@@ -40,7 +44,7 @@ const structuredData = {
 const faqStructuredData = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: faq.map((item) => ({
+  mainEntity: homeFaq.map((item) => ({
     '@type': 'Question',
     name: item.question,
     acceptedAnswer: { '@type': 'Answer', text: item.answer },
@@ -58,15 +62,24 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
       />
-      <Hero />
-      <StartingPoints />
-      <Services />
-      <Work />
-      <Approach />
-      <About />
-      <FoundingOffer />
-      <FAQ />
-      <Contact />
+      <SiteHeader />
+      <main id="main">
+        <Hero />
+        <Problems />
+        <HowItWorks
+          id="how-it-works"
+          heading="From business problem to working system in three steps."
+          steps={homeSteps}
+        />
+        <WorkNav />
+        <Services />
+        <FoundingOffer />
+        <FAQ />
+        <Founder />
+        <InquirySection />
+      </main>
+      <SiteFooter />
+      <MobileStickyCta href="#inquiry" targetId="inquiry" />
     </>
   );
 }
